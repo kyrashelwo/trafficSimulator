@@ -3,6 +3,7 @@
   * super-class of eg car, truck, ect.
   */
 #include "vehicle.hpp"
+#include "pointerException.hpp"
 
     
 Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime,double velocity, Lane *lane, double position) :
@@ -18,7 +19,10 @@ Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, do
 }
 
 
-Vehicle::~Vehicle() { /* nothing to be done here */}
+Vehicle::~Vehicle() {
+    // std::cout << "deleting vehicle at "<< mPosition << " with speed " << mVel << std::endl;
+    /* nothing to be done here */
+}
 
 void Vehicle::accelerate(double acc, double t) {
     acc = std::min(acc, mMaxAcc);

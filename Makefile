@@ -7,7 +7,7 @@
 
 CC = g++ 
 CC_FLAGS = -Wall -std=c++11
-EXEC = carSimulation
+EXEC = trafficSimulator
 
 # File names
 SOURCES = $(wildcard libs/*.cpp *.cpp)
@@ -21,6 +21,7 @@ compile: $(OBJECTS)
 # debugger
 debug: $(OBJECTS_DEBUG)
 	$(CC) $(CC_FLAGS) -g $(OBJECTS_DEBUG) -o $(EXEC)
+	gdb $(EXEC)
 
 # To obtain object files (only from .cpp)
 %.o: %.cpp 
@@ -40,3 +41,6 @@ clean:
 
 open:
 	vim *.cpp libs/*.cpp libs/*.hpp -p
+
+run:
+	./$(EXEC)
