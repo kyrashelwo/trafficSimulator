@@ -9,6 +9,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "driver.hpp"
+
 class Driver;
 
 class Lane;
@@ -17,7 +19,7 @@ enum CarType {CAR, TRUCK};
 
 class Vehicle {
 private:
-    const Driver *mDriver; // contains personality of driver. Determines when/how he accelerates/decelerates and when he switches lines.
+    const Driver *mpDriver; // contains personality of driver. Determines when/how he accelerates/decelerates and when he switches lines.
     const double mLength; // Length of the vehicle.
     const double mWidth; // Width of the vehicle.
     const double mMaxAcc; // Maximum Acceleration possible for this vehicle (both throttle and break).
@@ -28,7 +30,7 @@ private:
     Lane *mpLane; // points to the lane, the car is currently driving on. 
 
 public:
-    Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, double vel, Lane *lane, double position = 0);
+    Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver *driver, double vel, Lane *lane, double position = 0);
     virtual ~Vehicle();
 
     virtual CarType getTyp() = 0;
@@ -44,11 +46,14 @@ public:
 
     void setLane(Lane *lane);
 
+    // sets the driver/personality that drives the car.
+    void setDriver(Driver *driver);
+
     double distManInFront();
     double velDiffToManInFront();
     // double getMaxAcc() {return maxAcc;}
-    void accelerate(double acc, double time);
-    void move();
+    void accelerate(double time, double distance, double velDiff);
+    void move(double time);
     void print(bool full = false);
 };
 

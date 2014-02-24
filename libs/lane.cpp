@@ -154,7 +154,51 @@ void Lane::print(bool full) {
 Vehicle* Lane::getLeadingVehicle(Vehicle* vehicle) {
     VehicleList *vehicleListEntry = findVehicleEntry(vehicle);
     // if the vehicle was not found, or there is no leading vehicle, return NULL.
+    if (vehicleListEntry == NULL || vehicleListEntry->next == NULL)
+        return NULL;
+    return vehicleListEntry->next->current;
+}
+
+Vehicle* Lane::getFollowingVehicle(Vehicle* vehicle) {
+    VehicleList *vehicleListEntry = findVehicleEntry(vehicle);
+    // if the vehicle was not found, or there is no leading vehicle, return NULL.
     if (vehicleListEntry == NULL || vehicleListEntry->previous == NULL)
         return NULL;
     return vehicleListEntry->previous->current;
+}
+
+void Lane::moveVehicles(double time) {
+    VehicleList *h = mpRoot;
+    while (h != NULL) {
+        h->current->move(time);
+        h = h->next;
+    }
+}
+
+double Lane::getLeaderDist(Vehicle *vehicle) {
+    Vehicle *leader = getLeadingVehicle(vehicle);
+    if (leader) 
+        return leader->getPos() - vehicle->getPos();
+    else { 
+        // if there is no leader, return a huge value.
+        return 1000;
+    }
+}
+
+double Lane::getLeaderVelDiff(Vehicle *vehicle) {
+    Vehicle *leader = getLeadingVehicle(vehicle);
+    if (leader) 
+        return leader->getVel() - vehicle->getVel();
+    else { 
+        // if there is no leader, return 0.
+        return 0;
+    }
+}
+
+void Lane::accelerateVehicles(double time) {
+    VehicleList *h = mpRoot;
+    while (h != NULL) {
+        h->current->accelerate(time, getLeaderDist(h->current), getLeaderVelDiff(h->current));
+        h = h->next;
+    }
 }

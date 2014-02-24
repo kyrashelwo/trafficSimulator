@@ -6,7 +6,8 @@
 #include "pointerException.hpp"
 
     
-Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime,double velocity, Lane *lane, double position) :
+Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver *driver, double velocity, Lane *lane, double position) :
+    mpDriver(driver),
     mLength(length),
     mWidth(width),
     mMaxAcc(maxAcc),
@@ -24,7 +25,14 @@ Vehicle::~Vehicle() {
     /* nothing to be done here */
 }
 
-void Vehicle::accelerate(double acc, double t) {
+void Vehicle::accelerate(double t, double distance, double velDiff) {
+    double acc;
+
+    // abort if there is no driver linked to this car.
+    if (mpDriver == 0)
+        return;
+    acc = mpDriver->chooseAcceleration(mVel, distance, velDiff);
+
     acc = std::min(acc, mMaxAcc);
     acc = std::max(acc, -mMaxAcc);
     mVel += acc*t;
@@ -45,4 +53,14 @@ void Vehicle::print(bool full) {
         std::cout << "Adress to lane: " << mpLane << std::endl;
     }
     std::cout << "pos: " << getPos() << " vel: " << getVel() << std::endl;
+}
+
+void Vehicle::move(double time) {
+    mPosition += mVel*time;
+}
+
+void Vehicle::setDriver(Driver *driver) {
+    if (mpDriver == NULL)
+        throw PointerException("Vehicle::setDriver","Driver *driver");
+    mpDriver = driver;
 }

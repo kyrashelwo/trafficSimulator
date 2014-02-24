@@ -49,10 +49,23 @@ public:
     // returns wheter a vehicle fits into the defined place on this lane (true) or not (false)
     bool vehicleFits(Vehicle *vehicle);
 
+    // moves all Vehicles in this lane with their current speed for the specified time.
+    void moveVehicles(double time);
+
+    // return distance to leading vehicle.
+    double getLeaderDist(Vehicle *vehicle);
+
+    // return velocity difference to leading vehicle.
+    double getLeaderVelDiff(Vehicle *vehicle);
+
+    // update the accelerations of all vehicles in this lane.
+    void accelerateVehicles(double time);
+
     // prints a list of all vehicles in the list on the standard output
     void print(bool full = false);
 
     Vehicle* getLeadingVehicle(Vehicle* vehicle);
+    Vehicle* getFollowingVehicle(Vehicle* vehicle);
 };
 
 #endif // LIBS_LANE_HPP
