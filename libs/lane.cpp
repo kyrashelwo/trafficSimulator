@@ -24,7 +24,7 @@ Lane::~Lane() {
 Lane::VehicleList* Lane::findVehicleEntry(Vehicle *vehicle) {
     VehicleList *h = mpRoot;
 
-    // check if the given vehicle exists at all;
+    // check if the given vehicle exists at all
     if (vehicle == NULL)
         throw PointerException("findVehicleEntry", "Vehicle *vehicle");
 
@@ -43,7 +43,7 @@ bool Lane::deleteVehicle(Vehicle *vehicle) {
     VehicleList *storeNext;
     VehicleList *storePrev;
 
-    // check if the given vehicle exists at all;
+    // check if the given vehicle exists at all
     if (vehicle == NULL)
         throw PointerException("deleteVehicle", "Vehicle *vehicle");
 
@@ -52,11 +52,11 @@ bool Lane::deleteVehicle(Vehicle *vehicle) {
     if (h != NULL) {
         storeNext = h->next;
         storePrev = h->previous;
-        // std::cout << "next: " << storeNext; 
+        // std::cout << "next: " << storeNext;
         // std::cout << " / prev: " << storePrev << std::endl;
 
         // exclude element which will be deleted from list.
-        
+
         // if the deleted element is the first one set the new root.
         // else make sure, that the previous element links to the correct element after deletion.
         if (storePrev == NULL) {
@@ -104,16 +104,14 @@ bool Lane::vehicleFits(Vehicle *vehicle) {
 }
 
 void Lane::addVehicle(Vehicle *vehicle) {
-
     // check if the given vehicle exists at all;
     if (vehicle == NULL)
         throw PointerException("addVehicle", "Vehicle *vehicle");
 
     VehicleList *h = mpRoot;
     VehicleList *tmp;
-    
-    if (vehicleFits(vehicle)) {
 
+    if (vehicleFits(vehicle)) {
         // is it the first vehicle?
         if (h == NULL) {
             mpRoot = new VehicleList;
@@ -123,8 +121,9 @@ void Lane::addVehicle(Vehicle *vehicle) {
             vehicle->setLane(this);
             return;
         }
-        while(h->next != NULL && h->next->current->getPos() < vehicle->getPos()) 
+        while (h->next != NULL && h->next->current->getPos() < vehicle->getPos()) {
             h = h->next;
+        }
 
         tmp = h->next;
         h->next = new VehicleList;
@@ -177,9 +176,10 @@ void Lane::moveVehicles(double time) {
 
 double Lane::getLeaderDist(Vehicle *vehicle) {
     Vehicle *leader = getLeadingVehicle(vehicle);
-    if (leader) 
+    if (leader) {
         return leader->getPos() - vehicle->getPos();
-    else { 
+    }
+    else {
         // if there is no leader, return a huge value.
         return 1000;
     }
@@ -187,9 +187,10 @@ double Lane::getLeaderDist(Vehicle *vehicle) {
 
 double Lane::getLeaderVelDiff(Vehicle *vehicle) {
     Vehicle *leader = getLeadingVehicle(vehicle);
-    if (leader) 
+    if (leader) {
         return leader->getVel() - vehicle->getVel();
-    else { 
+    }
+    else {
         // if there is no leader, return 0.
         return 0;
     }

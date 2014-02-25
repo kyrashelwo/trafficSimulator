@@ -5,7 +5,6 @@
 #include "vehicle.hpp"
 #include "pointerException.hpp"
 
-    
 Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver *driver, double velocity, Lane *lane, double position) :
     mpDriver(driver),
     mLength(length),

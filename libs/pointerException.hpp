@@ -16,7 +16,7 @@ public:
     PointerException();
     PointerException(std::string functionName);
     PointerException(std::string functionName, std::string variableName);
-    std::string getString() {return mText;}; 
+    std::string getString() {return mText;};
 };
 
 #endif // LIBS_POINTEREXCEPTION_HPP
