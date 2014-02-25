@@ -64,6 +64,12 @@ public:
     // prints a list of all vehicles in the list on the standard output
     void print(bool full = false);
 
+    // initiallizes the velocity to be inbetween two time-steps
+    void initLeapfrog(double time);
+
+    // integrates the system for the time 'time' with a leapfrog algorithm. Acceleartions are derived from the driver ai.
+    void leapfrog(double time); 
+
     Vehicle* getLeadingVehicle(Vehicle* vehicle);
     Vehicle* getFollowingVehicle(Vehicle* vehicle);
 };

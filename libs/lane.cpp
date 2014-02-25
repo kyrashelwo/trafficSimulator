@@ -202,3 +202,12 @@ void Lane::accelerateVehicles(double time) {
         h = h->next;
     }
 }
+
+void Lane::initLeapfrog(double time) {
+    accelerateVehicles(time/2);
+}
+
+void Lane::leapfrog(double time) {
+    moveVehicles(time);
+    accelerateVehicles(time);
+}
