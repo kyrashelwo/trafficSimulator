@@ -19,7 +19,7 @@ double Driver::chooseAcceleration(double velocity, double distance, double velDi
     // if the distance is getting smalle decelerate depending on how far it is away.
     if (velDiff < 0) {
         // if the driver is faster than is man in front, break.
-        return (velocity + (-velDiff)) * velDiff / (2 * distance);
+        return (2*velocity + velDiff) * velDiff / (2 * distance);
     } else {
         // if the driver is slower than the man in front, go to mFreeFlowVel.
         return (mFreeFlowVel - velocity) / mFreeFlowVel * mComfortAcc;
