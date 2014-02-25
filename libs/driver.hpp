@@ -1,6 +1,5 @@
- /* 
-  * Class that specifies what a vehicle is.
-  * super-class of eg car, truck, ect.
+ /*
+  * Class that specifies what a driver is.
   */
 
 #ifndef LIBS_DRIVER_HPP

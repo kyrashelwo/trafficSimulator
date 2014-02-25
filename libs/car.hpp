@@ -1,4 +1,4 @@
- /* 
+ /*
   * Class that specifies what a car is.
   */
 
