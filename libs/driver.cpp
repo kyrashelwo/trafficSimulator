@@ -1,15 +1,16 @@
 #include "driver.hpp"
 
-Driver::Driver(double minComfortDist, double freeFlowVel, double comfortAcc, double accVariance) {
-    mMinComfortDist = minComfortDist;
-    mFreeFlowVel = freeFlowVel;
-    mComfortAcc = comfortAcc;
-    mAccVariance = accVariance;
-}
+Driver::Driver(double minComfortDist, double freeFlowVel, double comfortAcc, double accVariance, double reactionTime) :  
+    mMinComfortDist(minComfortDist),
+    mFreeFlowVel(freeFlowVel),
+    mComfortAcc(comfortAcc),
+    mAccVariance(accVariance),
+    mReactionTime(reactionTime)
+{ /* nothing to be done ... */ }
 
-Driver::~Driver() {}
+Driver::~Driver() { /* nothing to be done ... */ }
 
-double Driver::chooseAcceleration(double velocity, double distance, double velDiff) const {
+double Driver::chooseAcceleration(Vehicle *vehicle, double distance, double velDiff) const {
     distance -= mMinComfortDist;
 
     // if the car is too close, decelerate as hard as possible.
@@ -19,14 +20,14 @@ double Driver::chooseAcceleration(double velocity, double distance, double velDi
     // if the distance is getting smaller decelerate depending on how far it is away.
     if (velDiff < 0) {
         // if the driver is faster than is man in front, break.
-        return (2 * velocity + velDiff) * velDiff / (2 * distance);
+        return (2 * vehicle->getVel() + velDiff) * velDiff / (2 * distance);
     } else {
         // if the driver is slower than the man in front, go to mFreeFlowVel.
-        return (mFreeFlowVel - velocity) / mFreeFlowVel * mComfortAcc;
+        return (mFreeFlowVel - vehicle->getVel()) / mFreeFlowVel * mComfortAcc;
     }
 }
 
-bool Driver::changeLane(Lane *leftLane, Lane *rightLane) const {
+bool Driver::changeLane(Lane *leftLane, Lane *currentLane, Lane *rightLane) const {
     // no multiLanes so far.
     return false;
 }

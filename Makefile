@@ -6,7 +6,10 @@
 # 	2. objects in seperate folder.
 
 CC = g++ 
-CC_FLAGS = -Wall -std=c++11
+SDL_LIB = -L/usr/local/lib -lSDL2 -Wl,-rpath=/usr/local/lib
+SDL_INCLUDE = -I/usr/local/include
+CXX_FLAGS = -Wall -c -std=c++11 $(SDL_INCLUDE)
+LDF_FLAGS = $(SDL_LIB)
 EXEC = trafficSimulator
 
 # File names
@@ -16,20 +19,20 @@ OBJECTS_DEBUG = $(SOURCES:.cpp=.o_d)
 
 # Main target
 compile: $(OBJECTS) 
-	$(CC) $(CC_FLAGS) $(OBJECTS) -o $(EXEC)
+	$(CC) $(OBJECTS) $(LDF_FLAGS) -o $(EXEC)
 
 # debugger
 debug: $(OBJECTS_DEBUG)
-	$(CC) $(CC_FLAGS) -g $(OBJECTS_DEBUG) -o $(EXEC)
+	$(CC) -g $(OBJECTS_DEBUG) $(LDF_FLAGS) -o $(EXEC)
 	gdb $(EXEC)
 
 # To obtain object files (only from .cpp)
 %.o: %.cpp 
-	$(CC) $(CC_FLAGS) -c $< -o $@
+	$(CC) $(CXX_FLAGS) -c $< -o $@
 
 # To obtain object files with debug information (only from .cpp)
 %.o_d: %.cpp 
-	$(CC) $(CC_FLAGS) -g -c $< -o $@
+	$(CC) $(CXX_FLAGS) -g -c $< -o $@
 
 # To remove generated files
 clean:
@@ -43,4 +46,4 @@ open:
 	vim *.cpp libs/*.cpp libs/*.hpp -p
 
 run:
-	./$(EXEC)
+	./$(EXEC) 2 100 1

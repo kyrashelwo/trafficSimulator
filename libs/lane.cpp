@@ -101,6 +101,7 @@ bool Lane::vehicleFits(Vehicle *vehicle) {
     }
 
     return true;
+    // TODO actually check, wheter there is enough space to change lanes.
 }
 
 void Lane::addVehicle(Vehicle *vehicle) {
@@ -121,10 +122,13 @@ void Lane::addVehicle(Vehicle *vehicle) {
             vehicle->setLane(this);
             return;
         }
+
+        // sort the vehicle at the right position
         while (h->next != NULL && h->next->current->getPos() < vehicle->getPos()) {
             h = h->next;
         }
 
+        // insert vehicle in list
         tmp = h->next;
         h->next = new VehicleList;
         h->next->previous = h;
@@ -136,6 +140,8 @@ void Lane::addVehicle(Vehicle *vehicle) {
             tmp->previous = h->next;
         }
         vehicle->setLane(this);
+    } else {
+        // TODO maybe return false here?
     }
 }
 
@@ -212,3 +218,26 @@ void Lane::leapfrog(double time) {
     moveVehicles(time);
     accelerateVehicles(time);
 }
+
+void Lane::draw(SDL_Renderer* pRenderer) {
+    SDL_Rect car;
+    car.x = 0;
+    car.y = 0;
+    car.w = 0;
+    car.h = 2;
+    int offsetY = 100;
+    VehicleList *h = mpRoot;
+    while (h != NULL) {
+        car.x = h->current->getPos() * mToPixel;
+        car.y = offsetY;
+        car.w = h->current->getLength() * mToPixel;
+        car.h = 2 * mToPixel;
+        // std::cout << "drawing car at: " << car.x << "/" << car.y << " with " << car.w << "x" << car.h << std::endl;
+        SDL_RenderFillRect( pRenderer, &car );
+
+        h = h->next;
+
+    }
+}
+
+const int Lane::mToPixel= 4;

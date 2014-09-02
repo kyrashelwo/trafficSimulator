@@ -16,6 +16,7 @@ Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, do
     mVel = velocity;
     mpLane = lane;
     mPosition = position;
+    mAccState = FREE_FLOW;
 }
 
 
@@ -27,14 +28,19 @@ Vehicle::~Vehicle() {
 void Vehicle::accelerate(double t, double distance, double velDiff) {
     double acc;
 
+
     // abort if there is no driver linked to this car.
-    if (mpDriver == 0)
+    if (mpDriver == 0) {
+        acc = 0;
+        std::cout << "acc: " << acc << std::endl;
         return;
-    acc = mpDriver->chooseAcceleration(mVel, distance, velDiff);
+    }
+    acc = mpDriver->chooseAcceleration(this, distance, velDiff);
 
     acc = std::min(acc, mMaxAcc);
     acc = std::max(acc, -mMaxAcc);
     mVel += acc*t;
+    mVel = std::max(mVel, 0.);
 }
 
 void Vehicle::setLane(Lane *lane) {

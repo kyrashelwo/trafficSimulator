@@ -8,14 +8,15 @@
 
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 #include "driver.hpp"
 
-class Driver;
 
 class Lane;
 
 enum CarType {CAR, TRUCK};
+
 
 class Vehicle {
 private:
@@ -28,6 +29,8 @@ private:
     double mVel; // current speed of the vehicle.
     double mPosition; // current position of the vehicle.
     Lane *mpLane; // points to the lane, the car is currently driving on. 
+    Driver::AcceleratingState mAccState; // current acceleration-state the vehicle is in
+    double mTimeUntilReaction;
 
 public:
     Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver *driver, double vel, Lane *lane, double position = 0);

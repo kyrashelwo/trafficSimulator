@@ -1,39 +1,76 @@
 #include "libs/lane.hpp"
 #include "libs/car.hpp"
+#include <SDL2/SDL.h>
 
 using namespace std;
 
 int main(int argc, char** args) {
+    const double dt = 0.05;
+    const double simulationSpeedup = 10;
     // check usage.
     if (argc != 4) {
         cout << "Usage: trafficSimulator <vel> <distance> <velDiff>" << endl;
         return 0;
     }
 
-    Driver *dConservative = new Driver(50, 120, 1, 0.1);
+    // initialize lane
+    Driver *dConservative = new Driver(50, 120, 1, 0.1, 0.1);
+    Driver *dAgressive = new Driver(2, 160, 4, 0.1, 0.1);
     Lane l1 = Lane();
-    Lane l2 = Lane();
-    Car *c1 = new Car(dConservative, 3, NULL, 0);
+    Car *c1 = new Car(dConservative, 4, &l1, 0);
     l1.addVehicle(c1);
-    Car *c2 = new Car(dConservative, 8, NULL, 6);
+    Car *c2 = new Car(dAgressive, 6, NULL, 20);
     l1.addVehicle(c2);
-    Car *c3 = new Car(dConservative, 1.5, NULL, 3);
+    Car *c3 = new Car(dConservative, 4, NULL, 45);
     l1.addVehicle(c3);
-    l1.print();
+    l1.initLeapfrog(dt);
 
-    /* c1->print();
-     * cout << l1.getLeaderDist(c1) << " , " << l1.getLeaderVelDiff(c1) << endl;
+    /// open window
+    SDL_Window* pWindow = NULL;
 
-     * c2->print();
-     * cout << l1.getLeaderDist(c3) << " , " << l1.getLeaderVelDiff(c2) << endl;
+    pWindow = SDL_CreateWindow("Traffic Simulation", SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            1000,
+            200,
+            SDL_WINDOW_SHOWN);
 
-     * c3->print();
-     * cout << l1.getLeaderDist(c3) << " , " << l1.getLeaderVelDiff(c3) << endl;
-     */
+    if (pWindow == NULL)
+        return 0;
 
-    cout << "new acceleration: " << dConservative->chooseAcceleration(atoi(args[1]), atoi(args[2]), atoi(args[3])) << endl;
+    // Setup renderer
+    SDL_Renderer* pRenderer = NULL;
+    pRenderer =  SDL_CreateRenderer( pWindow, 0, SDL_RENDERER_ACCELERATED);
 
-    // l1.moveVehicles(0.1);
-    // l1.print();
+    if (pRenderer == 0)
+        return 0;
 
+    for(int i=0; i < 300; i++) {
+
+        // Set render color to white. 
+        SDL_SetRenderDrawColor( pRenderer, 200, 200, 200, 255 );
+
+        // Clear winow
+        SDL_RenderClear( pRenderer );
+
+        SDL_SetRenderDrawColor( pRenderer, 0, 0, 0, 255 );
+
+
+
+        // Render rect
+        // SDL_RenderFillRect( pRenderer, &r );
+        l1.draw(pRenderer);
+
+        // Render the rect to the screen
+        SDL_RenderPresent(pRenderer);
+
+        // Wait for 5 sec
+        SDL_Delay(1000 * dt/ simulationSpeedup);
+
+        // do a leapfrog step
+        l1.leapfrog(dt);
+
+    }
+
+    SDL_DestroyWindow(pWindow);
+    SDL_Quit();
 }

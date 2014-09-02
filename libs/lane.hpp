@@ -4,6 +4,7 @@
 #include "vehicle.hpp"
 #include "pointerException.hpp"
 #include <list>
+#include <SDL2/SDL.h>
 
 class Lane {
 private:
@@ -33,6 +34,8 @@ private:
 
     VehicleList* getRoot() {return mpRoot;}
 
+    static const int mToPixel;
+
 public:
     // create a new (empty) lane.
     Lane();
@@ -40,7 +43,7 @@ public:
     // destroy a lane. don't forget to delete also all vehicles in this lane.
     ~Lane();
 
-    // adds a new vehicle to the Lan
+    // adds a new vehicle to the lane.
     void addVehicle(Vehicle *vehicle);
 
     // deletes an existing vehicle and returns true, if sucessful.
@@ -72,6 +75,13 @@ public:
 
     Vehicle* getLeadingVehicle(Vehicle* vehicle);
     Vehicle* getFollowingVehicle(Vehicle* vehicle);
+
+    // draw the lane on the current renderer
+    void draw(SDL_Renderer* pRenderer);
+
+    // scale distances from meter to pixel
 };
+
+
 
 #endif // LIBS_LANE_HPP
