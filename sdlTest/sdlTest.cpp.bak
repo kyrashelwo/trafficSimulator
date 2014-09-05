@@ -1,0 +1,37 @@
+// *** warning *** 
+// must be compiled with -lSDL flag.
+
+#include "SDL/SDL.h"
+#include "iostream"
+
+int main( int argc, char* args[] ) { 
+    
+    SDL_Surface* hello = NULL;
+    SDL_Surface* screen = NULL;
+
+    //Start SDL 
+    SDL_Init( SDL_INIT_EVERYTHING ); 
+
+    // set up screen
+    screen = SDL_SetVideoMode(640, 480, 32, SDL_SWSURFACE );
+
+    // Load the image
+    hello = SDL_LoadBMP( "~/5Cent.bmp" );
+    std::cout << hello << std::endl;
+    
+
+    // Apply image to screen
+    SDL_BlitSurface( hello, NULL, screen, NULL );
+
+    // Update screen
+    SDL_Flip( screen );
+
+    // Pause
+    SDL_Delay( 2000 );
+    
+    SDL_FreeSurface( hello );
+    //Quit SDL 
+    SDL_Quit(); 
+    return 0; 
+
+}

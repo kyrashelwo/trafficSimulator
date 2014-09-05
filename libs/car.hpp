@@ -10,7 +10,7 @@
 class Car : public Vehicle {
 private:
 public:
-    Car(Driver *driver, double vel, Lane * lane, double position = 0);
+    Car(Driver driver, double vel, Lane * lane, double position = 0);
     ~Car();
     CarType getTyp() override;
 };

@@ -5,8 +5,8 @@
 #include "vehicle.hpp"
 #include "pointerException.hpp"
 
-Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver *driver, double velocity, Lane *lane, double position) :
-    mpDriver(driver),
+Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver driver, double velocity, Lane *lane, double position) :
+    mDriver(driver),
     mLength(length),
     mWidth(width),
     mMaxAcc(maxAcc),
@@ -16,7 +16,6 @@ Vehicle::Vehicle(double length, double width, double maxAcc, double maxSpeed, do
     mVel = velocity;
     mpLane = lane;
     mPosition = position;
-    mAccState = FREE_FLOW;
 }
 
 
@@ -25,21 +24,23 @@ Vehicle::~Vehicle() {
     /* nothing to be done here */
 }
 
-void Vehicle::accelerate(double t, double distance, double velDiff) {
+void Vehicle::accelerate(double time, double distance, double velDiff) {
     double acc;
 
 
     // abort if there is no driver linked to this car.
-    if (mpDriver == 0) {
-        acc = 0;
-        std::cout << "acc: " << acc << std::endl;
-        return;
-    }
-    acc = mpDriver->chooseAcceleration(this, distance, velDiff);
+    // if (mpDriver == 0) {
+    //     acc = 0;
+    //     std::cout << "acc: " << acc << std::endl;
+    //     return;
+    // }
+    acc = mDriver.chooseAcceleration(time, mVel, distance, velDiff);
+    // std::cout << "vel: " << mVel << " distance: " << distance << " velDiff: " << velDiff << std::endl;
+    // std::cout << mPosition << " accelerates with " << acc << std::endl;
 
     acc = std::min(acc, mMaxAcc);
     acc = std::max(acc, -mMaxAcc);
-    mVel += acc*t;
+    mVel += acc*time;
     mVel = std::max(mVel, 0.);
 }
 
@@ -62,10 +63,14 @@ void Vehicle::print(bool full) {
 
 void Vehicle::move(double time) {
     mPosition += mVel*time;
+    if (mPosition >= 600)
+        mPosition -= 600;
 }
 
-void Vehicle::setDriver(Driver *driver) {
-    if (mpDriver == NULL)
-        throw PointerException("Vehicle::setDriver","Driver *driver");
-    mpDriver = driver;
+void Vehicle::shift(double shift) {
+    mPosition += shift;
 }
+
+// void Vehicle::setDriver(Driver driver) {
+//     mDriver = driver;
+// }

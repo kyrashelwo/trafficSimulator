@@ -1,10 +1,11 @@
 #ifndef LIBS_LANE_HPP
 #define LIBS_LANE_HPP
 
-#include "vehicle.hpp"
-#include "pointerException.hpp"
 #include <list>
 #include <SDL2/SDL.h>
+
+#include "vehicle.hpp"
+#include "pointerException.hpp"
 
 class Lane {
 private:
@@ -13,6 +14,11 @@ private:
         VehicleList *next;
         VehicleList *previous;
     };
+
+
+    int r[3] = {0, 255, 255};
+    int g[3] = {255, 255, 0};
+
 
     VehicleList *mpRoot;
 
@@ -78,6 +84,12 @@ public:
 
     // draw the lane on the current renderer
     void draw(SDL_Renderer* pRenderer);
+
+    // shift the lane to keep in displayable
+    void shift(double shiftVelocity, double time);
+
+    // follow a certain car with the camera
+    void followVehicle(Vehicle *vehile, double time);
 
     // scale distances from meter to pixel
 };

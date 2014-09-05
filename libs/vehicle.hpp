@@ -12,7 +12,6 @@
 
 #include "driver.hpp"
 
-
 class Lane;
 
 enum CarType {CAR, TRUCK};
@@ -20,7 +19,7 @@ enum CarType {CAR, TRUCK};
 
 class Vehicle {
 private:
-    const Driver *mpDriver; // contains personality of driver. Determines when/how he accelerates/decelerates and when he switches lines.
+    Driver mDriver; // contains personality of driver. Determines when/how he accelerates/decelerates and when he switches lines.
     const double mLength; // Length of the vehicle.
     const double mWidth; // Width of the vehicle.
     const double mMaxAcc; // Maximum Acceleration possible for this vehicle (both throttle and break).
@@ -29,11 +28,10 @@ private:
     double mVel; // current speed of the vehicle.
     double mPosition; // current position of the vehicle.
     Lane *mpLane; // points to the lane, the car is currently driving on. 
-    Driver::AcceleratingState mAccState; // current acceleration-state the vehicle is in
     double mTimeUntilReaction;
 
 public:
-    Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver *driver, double vel, Lane *lane, double position = 0);
+    Vehicle(double length, double width, double maxAcc, double maxSpeed, double laneChangeTime, Driver driver, double vel, Lane *lane, double position = 0);
     virtual ~Vehicle();
 
     virtual CarType getTyp() = 0;
@@ -47,10 +45,14 @@ public:
     double getMaxSpeed() {return mMaxSpeed;}
     double getLaneChangeTime() {return mLaneChangeTime;}
 
+    void shift(double shift);
+
+    AcceleratingState getAccState() {return mDriver.getAccState();}
+
     void setLane(Lane *lane);
 
     // sets the driver/personality that drives the car.
-    void setDriver(Driver *driver);
+    // void setDriver(Driver driver);
 
     double distManInFront();
     double velDiffToManInFront();

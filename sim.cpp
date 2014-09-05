@@ -13,15 +13,19 @@ int main(int argc, char** args) {
         return 0;
     }
 
+    // initialize prototypes of the driver personalities.
+    Driver *dConservative = new Driver(50, 120, 1, 0.1, 0.2);
+    Driver *dAgressive = new Driver(2, 160, 4, 0.1, 0.2);
+
     // initialize lane
-    Driver *dConservative = new Driver(50, 120, 1, 0.1, 0.1);
-    Driver *dAgressive = new Driver(2, 160, 4, 0.1, 0.1);
     Lane l1 = Lane();
-    Car *c1 = new Car(dConservative, 4, &l1, 0);
+    Car *c0 = new Car(*dAgressive, 4, &l1, -20);
+    l1.addVehicle(c0);
+    Car *c1 = new Car(*dAgressive, 4, &l1, 20);
     l1.addVehicle(c1);
-    Car *c2 = new Car(dAgressive, 6, NULL, 20);
+    Car *c2 = new Car(*dAgressive, 2, NULL, 60);
     l1.addVehicle(c2);
-    Car *c3 = new Car(dConservative, 4, NULL, 45);
+    Car *c3 = new Car(*dConservative, 1, NULL, 100);
     l1.addVehicle(c3);
     l1.initLeapfrog(dt);
 
@@ -44,17 +48,13 @@ int main(int argc, char** args) {
     if (pRenderer == 0)
         return 0;
 
-    for(int i=0; i < 300; i++) {
+    for(int i=0; i < 1000; i++) {
 
         // Set render color to white. 
         SDL_SetRenderDrawColor( pRenderer, 200, 200, 200, 255 );
 
         // Clear winow
         SDL_RenderClear( pRenderer );
-
-        SDL_SetRenderDrawColor( pRenderer, 0, 0, 0, 255 );
-
-
 
         // Render rect
         // SDL_RenderFillRect( pRenderer, &r );
@@ -68,6 +68,9 @@ int main(int argc, char** args) {
 
         // do a leapfrog step
         l1.leapfrog(dt);
+
+        // shift the lane to keep track of vehicles
+        l1.followVehicle(c3,dt);
 
     }
 

@@ -187,7 +187,7 @@ double Lane::getLeaderDist(Vehicle *vehicle) {
     }
     else {
         // if there is no leader, return a huge value.
-        return 1000;
+        return INFINITY;
     }
 }
 
@@ -198,7 +198,7 @@ double Lane::getLeaderVelDiff(Vehicle *vehicle) {
     }
     else {
         // if there is no leader, return 0.
-        return 0;
+        return INFINITY;
     }
 }
 
@@ -221,10 +221,14 @@ void Lane::leapfrog(double time) {
 
 void Lane::draw(SDL_Renderer* pRenderer) {
     SDL_Rect car;
+    SDL_Rect stateRect;
     car.x = 0;
     car.y = 0;
     car.w = 0;
     car.h = 2;
+
+    stateRect.w = 10;
+    stateRect.h = 5;
     int offsetY = 100;
     VehicleList *h = mpRoot;
     while (h != NULL) {
@@ -232,12 +236,36 @@ void Lane::draw(SDL_Renderer* pRenderer) {
         car.y = offsetY;
         car.w = h->current->getLength() * mToPixel;
         car.h = 2 * mToPixel;
-        // std::cout << "drawing car at: " << car.x << "/" << car.y << " with " << car.w << "x" << car.h << std::endl;
+
+        SDL_SetRenderDrawColor( pRenderer, 0, 0, 0, 255 );
+
         SDL_RenderFillRect( pRenderer, &car );
 
+        // draw a small rectangle indicating the current state of the driver.
+        stateRect.x = car.x;
+        stateRect.y = car.y;
+        SDL_SetRenderDrawColor(pRenderer,
+                r[h->current->getAccState()], 
+                g[h->current->getAccState()], 
+                0,
+                255);
+        SDL_RenderFillRect(pRenderer, &stateRect);
         h = h->next;
 
     }
+}
+
+
+void Lane::shift(double shiftVelocity, double time) {
+    VehicleList *h = mpRoot;
+    while (h != NULL) {
+        h->current->shift(- shiftVelocity * time);
+        h = h->next;
+    }
+}
+
+void Lane::followVehicle(Vehicle *vehicle, double time) {
+    shift(vehicle->getVel(), time);
 }
 
 const int Lane::mToPixel= 4;
